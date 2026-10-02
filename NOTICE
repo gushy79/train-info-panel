@@ -1,0 +1,10 @@
+Train Info Panel
+Copyright 2026 The Train Info Panel contributors
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This product includes or builds on third-party software under its own licences; see the
+"Credits and licences" section of README.md. In particular: Espressif's JD9853 panel driver
+(Apache-2.0, vendored in firmware/components/esp_lcd_jd9853), LVGL (MIT), esp_lvgl_port
+(Apache-2.0) and cJSON (MIT). Departure data is provided by National Rail Enquiries / Rail
+Delivery Group via the Rail Data Marketplace under the licence accepted at subscription.

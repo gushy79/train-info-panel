@@ -1,0 +1,70 @@
+{
+  "v": 1,
+  "mode": "scheduled",
+  "generated": 1790950667,
+  "station": {
+    "crs": "BKM",
+    "name": "Berkhamsted"
+  },
+  "filter": {
+    "mode": "to",
+    "crs": "HML",
+    "name": "Hemel Hempstead",
+    "label": "Southbound"
+  },
+  "message": null,
+  "services": [
+    {
+      "std": "15:26",
+      "etd": null,
+      "state": "unknown",
+      "late": 0,
+      "plat": null,
+      "plat_was": null,
+      "dest": "London Euston",
+      "dest_crs": "EUS",
+      "via": null,
+      "op": "GW",
+      "why": null
+    },
+    {
+      "std": "15:56",
+      "etd": null,
+      "state": "unknown",
+      "late": 0,
+      "plat": null,
+      "plat_was": null,
+      "dest": "London Euston",
+      "dest_crs": "EUS",
+      "via": null,
+      "op": "GW",
+      "why": null
+    },
+    {
+      "std": "16:30",
+      "etd": null,
+      "state": "unknown",
+      "late": 0,
+      "plat": null,
+      "plat_was": null,
+      "dest": "London Euston",
+      "dest_crs": "EUS",
+      "via": null,
+      "op": "GW",
+      "why": null
+    },
+    {
+      "std": "16:59",
+      "etd": null,
+      "state": "unknown",
+      "late": 0,
+      "plat": null,
+      "plat_was": null,
+      "dest": "London Euston",
+      "dest_crs": "EUS",
+      "via": null,
+      "op": "GW",
+      "why": null
+    }
+  ]
+}

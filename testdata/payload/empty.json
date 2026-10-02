@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "mode": "live",
+  "generated": 1790950667,
+  "station": {
+    "crs": "BKM",
+    "name": "Berkhamsted"
+  },
+  "filter": {
+    "mode": "to",
+    "crs": "HML",
+    "name": "Hemel Hempstead",
+    "label": "Southbound"
+  },
+  "message": null,
+  "services": []
+}

@@ -1,0 +1,32 @@
+CONFIG_IDF_TARGET="esp32c6"
+
+CONFIG_PARTITION_TABLE_CUSTOM=y
+CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions.csv"
+
+# Board has 8MB embedded flash (confirmed with esptool on the physical unit); the default assumes 2MB.
+CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y
+CONFIG_ESPTOOLPY_FLASHSIZE="8MB"
+
+# JD9853 over SPI expects byte-swapped RGB565.
+CONFIG_LV_COLOR_16_SWAP=y
+
+# Sizes used by ui/train_ui.c (CLAUDE.md: nothing below 12 px). 48 is the largest built-in
+# Montserrat and stands in for the 60 px takeover figure in docs/design.
+CONFIG_LV_FONT_MONTSERRAT_12=y
+CONFIG_LV_FONT_MONTSERRAT_14=y
+CONFIG_LV_FONT_MONTSERRAT_16=y
+CONFIG_LV_FONT_MONTSERRAT_18=y
+CONFIG_LV_FONT_MONTSERRAT_20=y
+CONFIG_LV_FONT_MONTSERRAT_22=y
+CONFIG_LV_FONT_MONTSERRAT_24=y
+CONFIG_LV_FONT_MONTSERRAT_48=y
+
+CONFIG_LV_MEM_SIZE_KILOBYTES=48
+
+# Networking: outbound HTTPS only. Verify servers against the bundled CA list; no insecure fallback.
+CONFIG_MBEDTLS_CERTIFICATE_BUNDLE=y
+CONFIG_ESP_TLS_INSECURE=n
+CONFIG_ESP_TLS_SKIP_SERVER_CERT_VERIFY=n
+CONFIG_MBEDTLS_SSL_PROTO_TLS1_3=y
+# Wi-Fi credentials are kept in our own NVS, not in the Wi-Fi driver's flash store.
+CONFIG_ESP_WIFI_NVS_ENABLED=n

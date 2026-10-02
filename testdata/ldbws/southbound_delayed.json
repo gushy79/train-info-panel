@@ -1,0 +1,175 @@
+{
+  "generatedAt": "2026-10-02T15:17:47.6126798+01:00",
+  "locationName": "Berkhamsted",
+  "crs": "BKM",
+  "filterLocationName": "Hemel Hempstead",
+  "filtercrs": "HML",
+  "filterType": "to",
+  "platformAvailable": true,
+  "areServicesAvailable": true,
+  "Xmlns": {
+    "Count": 8
+  },
+  "trainServices": [
+    {
+      "origin": [
+        {
+          "locationName": "Milton Keynes Central",
+          "crs": "MKC",
+          "via": null,
+          "futureChangeTo": null,
+          "assocIsCancelled": false
+        }
+      ],
+      "destination": [
+        {
+          "locationName": "London Euston",
+          "crs": "EUS",
+          "via": null,
+          "futureChangeTo": null,
+          "assocIsCancelled": false
+        }
+      ],
+      "currentOrigins": null,
+      "currentDestinations": null,
+      "std": "15:26",
+      "etd": "15:38",
+      "platform": "4",
+      "operator": "Great Western Railway",
+      "operatorCode": "GW",
+      "isCircularRoute": false,
+      "isCancelled": false,
+      "filterLocationCancelled": false,
+      "serviceType": "train",
+      "length": 8,
+      "detachFront": false,
+      "isReverseFormation": false,
+      "cancelReason": null,
+      "delayReason": "a signalling problem",
+      "serviceID": "MOCK0001",
+      "adhocAlerts": null,
+      "futureCancellation": false,
+      "futureDelay": true
+    },
+    {
+      "origin": [
+        {
+          "locationName": "Milton Keynes Central",
+          "crs": "MKC",
+          "via": null,
+          "futureChangeTo": null,
+          "assocIsCancelled": false
+        }
+      ],
+      "destination": [
+        {
+          "locationName": "London Euston",
+          "crs": "EUS",
+          "via": null,
+          "futureChangeTo": null,
+          "assocIsCancelled": false
+        }
+      ],
+      "currentOrigins": null,
+      "currentDestinations": null,
+      "std": "15:56",
+      "etd": "Delayed",
+      "platform": "4",
+      "operator": "Great Western Railway",
+      "operatorCode": "GW",
+      "isCircularRoute": false,
+      "isCancelled": false,
+      "filterLocationCancelled": false,
+      "serviceType": "train",
+      "length": 4,
+      "detachFront": false,
+      "isReverseFormation": false,
+      "cancelReason": null,
+      "delayReason": null,
+      "serviceID": "MOCK0002",
+      "adhocAlerts": null,
+      "futureCancellation": false,
+      "futureDelay": true
+    },
+    {
+      "origin": [
+        {
+          "locationName": "Milton Keynes Central",
+          "crs": "MKC",
+          "via": null,
+          "futureChangeTo": null,
+          "assocIsCancelled": false
+        }
+      ],
+      "destination": [
+        {
+          "locationName": "London Euston",
+          "crs": "EUS",
+          "via": null,
+          "futureChangeTo": null,
+          "assocIsCancelled": false
+        }
+      ],
+      "currentOrigins": null,
+      "currentDestinations": null,
+      "std": "16:30",
+      "etd": "On time",
+      "platform": "4",
+      "operator": "Great Western Railway",
+      "operatorCode": "GW",
+      "isCircularRoute": false,
+      "isCancelled": false,
+      "filterLocationCancelled": false,
+      "serviceType": "train",
+      "length": 4,
+      "detachFront": false,
+      "isReverseFormation": false,
+      "cancelReason": null,
+      "delayReason": null,
+      "serviceID": "MOCK0003",
+      "adhocAlerts": null,
+      "futureCancellation": false,
+      "futureDelay": false
+    },
+    {
+      "origin": [
+        {
+          "locationName": "Milton Keynes Central",
+          "crs": "MKC",
+          "via": null,
+          "futureChangeTo": null,
+          "assocIsCancelled": false
+        }
+      ],
+      "destination": [
+        {
+          "locationName": "London Euston",
+          "crs": "EUS",
+          "via": null,
+          "futureChangeTo": null,
+          "assocIsCancelled": false
+        }
+      ],
+      "currentOrigins": null,
+      "currentDestinations": null,
+      "std": "16:59",
+      "etd": "On time",
+      "platform": "4",
+      "operator": "Great Western Railway",
+      "operatorCode": "GW",
+      "isCircularRoute": false,
+      "isCancelled": false,
+      "filterLocationCancelled": false,
+      "serviceType": "train",
+      "length": 4,
+      "detachFront": false,
+      "isReverseFormation": false,
+      "cancelReason": null,
+      "delayReason": null,
+      "serviceID": "MOCK0004",
+      "adhocAlerts": null,
+      "futureCancellation": false,
+      "futureDelay": false
+    }
+  ]
+}

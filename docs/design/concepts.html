@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Train panel concepts</title>
+<style>
+  body { background:#222; color:#ccc; font:14px/1.4 system-ui,sans-serif; margin:16px; }
+  h1,h2 { font-weight:600; } h2 { margin:28px 0 4px; } p.n { margin:0 0 10px; max-width:70ch; }
+  .grid { display:flex; flex-wrap:wrap; gap:14px; }
+  figure { margin:0; } figcaption { font-size:12px; margin-top:4px; color:#999; }
+  /* The screen: exactly 320x172 device pixels, 1:1. */
+  .s { position:relative; width:320px; height:172px; overflow:hidden; background:#000; color:#fff;
+       font-family:"Liberation Sans",Arial,sans-serif; font-variant-numeric:tabular-nums; }
+  .s * { box-sizing:border-box; white-space:nowrap; }
+  .abs { position:absolute; } .el { overflow:hidden; text-overflow:ellipsis; }
+  .b { font-weight:700; }
+  .ok{color:#4ade80} .warn{color:#fbbf24} .bad{color:#ff5a5a} .dim{color:#9a9a9a}
+  .canc{text-decoration:line-through; color:#ff5a5a}
+  .hdr { left:0; top:0; width:320px; height:22px; background:#1a1a1a; border-bottom:1px solid #333; }
+  /* freshness chip: text AND colour, so it survives colour-blind viewing */
+  .chip { top:2px; right:4px; height:18px; padding:0 6px; font-size:12px; font-weight:700; line-height:18px; border-radius:2px; }
+  .chip.live{background:#14532d;color:#bbf7d0} .chip.sched{background:#333;color:#ddd;border:1px solid #888;line-height:16px}
+  .chip.stale{background:#fbbf24;color:#000}
+  .stale-s { filter:grayscale(1) brightness(.8); } .stale-s .hdr{background:#2a2000}
+  .stale-s .chip{filter:none}
+  .band { left:0; top:0; width:320px; height:34px; }
+  .band.red{background:#c62828;color:#fff} .band.amb{background:#f59e0b;color:#000}
+  .band .chip { top:8px; background:#000; color:#bbf7d0; } .band .chip.live{background:#000}
+  table.r { border-collapse:collapse; margin:8px 0 0; } table.r td,table.r th { border:1px solid #444; padding:3px 8px; font-size:12px; text-align:left; }
+</style></head><body>
+<h1>Train panel concepts, 320×172 at 1:1</h1>
+<p class="n">Chosen layout: <b>C</b>. Takeover and empty states are designed on C at the bottom of this page.</p>
+<p class="n">Data comes from <code>testdata/payload/*.json</code>. Rows: Concept A, B, C. Columns: live, delayed, cancelled + platform change, scheduled fallback, stale (25 min old).</p>
+<div id="out"></div>
+<script>
+const DATA = {"live_normal": {"v": 1, "mode": "live", "generated": 1790950667, "station": {"crs": "BKM", "name": "Berkhamsted"}, "filter": {"mode": "to", "crs": "HML", "name": "Hemel Hempstead", "label": "Southbound"}, "message": null, "services": [{"std": "15:26", "etd": "15:26", "state": "on_time", "late": 0, "plat": "4", "plat_was": null, "dest": "London Euston", "dest_crs": "EUS", "via": null, "op": "GW", "why": null}, {"std": "15:56", "etd": "15:56", "state": "on_time", "late": 0, "plat": "4", "plat_was": null, "dest": "London Euston", "dest_crs": "EUS", "via": null, "op": "GW", "why": null}, {"std": "16:30", "etd": "16:30", "state": "on_time", "late": 0, "plat": "4", "plat_was": null, "dest": "London Euston", "dest_crs": "EUS", "via": null, "op": "GW", "why": null}, {"std": "16:59", "etd": "16:59", "state": "on_time", "late": 0, "plat": "4", "plat_was": null, "dest": "London Euston", "dest_crs": "EUS", "via": null, "op": "GW", "why": null}], "_age": 20}, "delayed": {"v": 1, "mode": "live", "generated": 1790950667, "station": {"crs": "BKM", "name": "Berkhamsted"}, "filter": {"mode": "to", "crs": "HML", "name": "Hemel Hempstead", "label": "Southbound"}, "message": null, "services": [{"std": "15:26", "etd": "15:38", "state": "delayed", "late": 12, "plat": "4", "plat_was": null, "dest": "London Euston", "dest_crs": "EUS", "via": null, "op": "GW", "why": "a signalling problem"}, {"std": "15:56", "etd": null, "state": "delayed", "late": 0, "plat": "4", "plat_was": null, "dest": "London Euston", "dest_crs": "EUS", "via": null, "op": "GW", "why": null}, {"std": "16:30", "etd": "16:30", "state": "on_time", "late": 0, "plat": "4", "plat_was": null, "dest": "London Euston", "dest_crs": "EUS", "via": null, "op": "GW", "why": null}, {"std": "16:59", "etd": "16:59", "state": "on_time", "late": 0, "plat": "4", "plat_was": null, "dest": "London Euston", "dest_crs": "EUS", "via": null, "op": "GW", "why": null}], "_age": 45}, "cancelled_platform_change": {"v": 1, "mode": "live", "generated": 1790950667, "station": {"crs": "BKM", "name": "Berkhamsted"}, "filter": {"mode": "to", "crs": "HML", "name": "Hemel Hempstead", "label": "Southbound"}, "message": "Mock notice: engineering work this weekend may affect services .", "services": [{"std": "15:26", "etd": null, "state": "cancelled", "late": 0, "plat": null, "plat_was": null, "dest": "London Euston", "dest_crs": "EUS", "via": null, "op": "GW", "why": "a shortage of train crew"}, {"std": "15:56", "etd": "15:56", "state": "on_time", "late": 0, "plat": "3", "plat_was": "4", "dest": "London Euston", "dest_crs": "EUS", "via": null, "op": "GW", "why": null}, {"std": "16:30", "etd": "16:30", "state": "on_time", "late": 0, "plat": "4", "plat_was": null, "dest": "London Euston", "dest_crs": "EUS", "via": null, "op": "GW", "why": null}, {"std": "16:59", "etd": "16:59", "state": "on_time", "late": 0, "plat": "4", "plat_was": null, "dest": "London Euston", "dest_crs": "EUS", "via": null, "op": "GW", "why": null}], "_age": 30}, "scheduled_fallback": {"v": 1, "mode": "scheduled", "generated": 1790950667, "station": {"crs": "BKM", "name": "Berkhamsted"}, "filter": {"mode": "to", "crs": "HML", "name": "Hemel Hempstead", "label": "Southbound"}, "message": null, "services": [{"std": "15:26", "etd": null, "state": "unknown", "late": 0, "plat": null, "plat_was": null, "dest": "London Euston", "dest_crs": "EUS", "via": null, "op": "GW", "why": null}, {"std": "15:56", "etd": null, "state": "unknown", "late": 0, "plat": null, "plat_was": null, "dest": "London Euston", "dest_crs": "EUS", "via": null, "op": "GW", "why": null}, {"std": "16:30", "etd": null, "state": "unknown", "late": 0, "plat": null, "plat_was": null, "dest": "London Euston", "dest_crs": "EUS", "via": null, "op": "GW", "why": null}, {"std": "16:59", "etd": null, "state": "unknown", "late": 0, "plat": null, "plat_was": null, "dest": "London Euston", "dest_crs": "EUS", "via": null, "op": "GW", "why": null}], "_age": 0}, "stale": {"v": 1, "mode": "live", "generated": 1790949167, "station": {"crs": "BKM", "name": "Berkhamsted"}, "filter": {"mode": "to", "crs": "HML", "name": "Hemel Hempstead", "label": "Southbound"}, "message": null, "services": [{"std": "15:26", "etd": "15:26", "state": "on_time", "late": 0, "plat": "4", "plat_was": null, "dest": "London Euston", "dest_crs": "EUS", "via": null, "op": "GW", "why": null}, {"std": "15:56", "etd": "15:56", "state": "on_time", "late": 0, "plat": "4", "plat_was": null, "dest": "London Euston", "dest_crs": "EUS", "via": null, "op": "GW", "why": null}, {"std": "16:30", "etd": "16:30", "state": "on_time", "late": 0, "plat": "4", "plat_was": null, "dest": "London Euston", "dest_crs": "EUS", "via": null, "op": "GW", "why": null}, {"std": "16:59", "etd": "16:59", "state": "on_time", "late": 0, "plat": "4", "plat_was": null, "dest": "London Euston", "dest_crs": "EUS", "via": null, "op": "GW", "why": null}], "_age": 1500}, "empty": {"v": 1, "mode": "live", "generated": 1790950667, "station": {"crs": "BKM", "name": "Berkhamsted"}, "filter": {"mode": "to", "crs": "HML", "name": "Hemel Hempstead", "label": "Southbound"}, "message": null, "services": [], "_age": 20}};
+const STATES = Object.keys(DATA).filter(k => k !== "empty");  // empty has its own section
+const LABEL = {empty:"empty live board", live_normal:"live", delayed:"delayed", cancelled_platform_change:"cancelled + platform change", scheduled_fallback:"scheduled fallback", stale:"stale"};
+const esc = s => String(s ?? "").replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const mode = p => p.mode === "scheduled" ? "sched" : (p._age > 600 ? "stale" : "live");
+const mins = s => Math.max(1, Math.round(s/60));
+function chip(p){
+  const m = mode(p);
+  const t = m==="sched" ? "TIMETABLE" : m==="stale" ? `STALE ${mins(p._age)}m` : (p._age>=120 ? `LIVE ${mins(p._age)}m` : "LIVE");
+  return `<div class="abs chip ${m}">${t}</div>`;
+}
+function hdr(p){
+  const f = ` - ${esc(p.filter ? p.filter.label : "All trains")}`;
+  return `<div class="abs hdr"><div class="abs b el" style="left:6px;top:2px;width:210px;font-size:15px;line-height:18px">${esc(p.station.name)}${f}</div>${chip(p)}</div>`;
+}
+// status text + class. Stale/scheduled never show countdown-style or realtime claims.
+function status(s, p){
+  const m = mode(p);
+  if (m==="sched") return ["Timetable","dim"];
+  if (s.state==="cancelled") return ["Cancelled","bad"];
+  if (s.state==="delayed") return [s.etd ? `Exp ${s.etd}` : "Delayed","warn"];
+  if (m==="stale") return ["Not live","dim"];
+  return ["On time","ok"];
+}
+const platTxt = (s,p) => mode(p)==="sched" ? "" : (s.plat ? "P"+s.plat : (s.state==="cancelled" ? "" : "P–"));
+const platCls = s => s.plat_was ? "warn b" : "";
+
+function A(p){ // aligned board rows
+  const rows = p.services.slice(0,4).map((s,i)=>{
+    const [t,c] = status(s,p), y = 22+i*32, canc = s.state==="cancelled";
+    return `<div class="abs b ${canc?"canc":""}" style="left:6px;top:${y+4}px;font-size:22px;line-height:24px">${s.std}</div>`+
+      `<div class="abs el ${canc?"canc":""}" style="left:70px;top:${y+5}px;width:132px;font-size:18px;line-height:22px">${esc(s.dest)}</div>`+
+      `<div class="abs ${platCls(s)}" style="left:204px;top:${y+7}px;width:30px;font-size:16px;line-height:18px">${platTxt(s,p)}</div>`+
+      `<div class="abs el ${c} b" style="left:236px;top:${y+8}px;width:80px;font-size:14px;line-height:16px">${t}</div>`+
+      `<div class="abs" style="left:0;top:${y+31}px;width:320px;height:1px;background:#262626"></div>`;
+  }).join("");
+  const foot = footer(p);
+  return hdr(p)+rows+`<div class="abs el ${foot[1]}" style="left:6px;top:152px;width:308px;font-size:13px;line-height:18px">${esc(foot[0])}</div>`;
+}
+function footer(p){
+  const m = mode(p);
+  if (m==="sched") return ["Timetable only: live times unavailable","dim"];
+  if (m==="stale") return ["No live update: times may be wrong","warn"];
+  const c = p.services.find(s=>s.state==="cancelled"||s.plat_was);
+  if (c && c.state==="cancelled") return [`${c.std} ${c.dest} cancelled: ${c.why||""}`,"bad"];
+  if (c) return [`${c.std} ${c.dest}: now platform ${c.plat} (was ${c.plat_was})`,"warn"];
+  const d = p.services.find(s=>s.state==="delayed");
+  if (d && d.why) return [`${d.std} delayed by ${d.why}`,"warn"];
+  return [p.message || "", "dim"];
+}
+
+function B(p){ // hero next train + three follow-ons
+  const [n,...rest] = p.services; const [t,c] = status(n,p), canc = n.state==="cancelled";
+  const left = `<div class="abs" style="left:0;top:22px;width:158px;height:130px;border-right:1px solid #333"></div>`+
+    `<div class="abs dim b" style="left:8px;top:26px;font-size:12px;line-height:14px">NEXT</div>`+
+    `<div class="abs b ${canc?"canc":""}" style="left:6px;top:38px;font-size:52px;line-height:56px;letter-spacing:-1px">${n.std}</div>`+
+    `<div class="abs el b ${canc?"canc":""}" style="left:8px;top:96px;width:146px;font-size:19px;line-height:22px">${esc(n.dest)}</div>`+
+    `<div class="abs b ${c}" style="left:8px;top:120px;font-size:16px;line-height:18px">${t}</div>`+
+    `<div class="abs ${platCls(n)}" style="left:100px;top:122px;font-size:14px;line-height:16px">${platTxt(n,p)}</div>`;
+  const right = rest.slice(0,3).map((s,i)=>{
+    const [t2,c2] = status(s,p), y=22+i*43, canc2 = s.state==="cancelled";
+    return `<div class="abs b ${canc2?"canc":""}" style="left:166px;top:${y+4}px;font-size:20px;line-height:22px">${s.std}</div>`+
+      `<div class="abs el ${canc2?"canc":""}" style="left:222px;top:${y+5}px;width:94px;font-size:15px;line-height:20px">${esc(s.dest)}</div>`+
+      `<div class="abs el b ${c2}" style="left:166px;top:${y+25}px;width:150px;font-size:13px;line-height:15px">${t2} ${platTxt(s,p)?"- "+platTxt(s,p):""}</div>`;
+  }).join("");
+  const foot = footer(p);
+  return hdr(p)+left+right+`<div class="abs el ${foot[1]}" style="left:6px;top:152px;width:308px;font-size:13px;line-height:18px">${esc(foot[0])}</div>`;
+}
+
+function C(p){ // two-line rows, wider destination
+  const rows = p.services.slice(0,3).map((s,i)=>{
+    const [t,c] = status(s,p), y=22+i*44, canc = s.state==="cancelled";
+    const sub = [t, platTxt(s,p) && "Platform "+platTxt(s,p).slice(1), s.plat_was && "(was "+s.plat_was+")", canc && s.why].filter(Boolean).join(" - ");
+    return `<div class="abs b ${canc?"canc":""}" style="left:6px;top:${y+3}px;font-size:24px;line-height:26px">${s.std}</div>`+
+      `<div class="abs el ${canc?"canc":""}" style="left:76px;top:${y+3}px;width:238px;font-size:20px;line-height:23px">${esc(s.dest)}</div>`+
+      `<div class="abs el ${c}" style="left:76px;top:${y+26}px;width:238px;font-size:14px;line-height:16px">${esc(sub)}</div>`+
+      `<div class="abs" style="left:0;top:${y+43}px;width:320px;height:1px;background:#262626"></div>`;
+  }).join("");
+  const m = mode(p), next = p.services[3];
+  const [foot, fc] = m==="sched" ? ["Timetable only: live times unavailable","dim"] : m==="stale" ? ["No live update: times may be wrong","warn"] : [next ? `Then ${next.std} ${next.dest}` : "","dim"];
+  return hdr(p)+rows+`<div class="abs el ${fc}" style="left:6px;top:157px;width:308px;font-size:12px;line-height:14px">${esc(foot)}</div>`;
+}
+
+const out = document.getElementById("out");
+for (const [name, fn, note] of [
+  ["A - Aligned board", A, "Four rows, one line each. Dense and familiar; destination limited to ~132px (about 14 chars at 18px) so ellipsis is common. Reason lives in the footer."],
+  ["B - Hero + list", B, "Next train at 52px; three followers. Best arm's-length answer; long destinations clip hardest (146px hero, 94px list) and followers show only three trains."],
+  ["C - Two-line rows", C, "Three rows: time + destination at 20px on line one, status/platform/reason at 14px on line two; the footer warns on timetable or stale data. Widest destinations (238px, ~20 chars); fewest trains."]]) {
+  out.insertAdjacentHTML("beforeend", `<h2>${name}</h2><p class="n">${note}</p><div class="grid" id="g${name[0]}"></div>`);
+  for (const k of STATES) {
+    const p = DATA[k];
+    document.getElementById("g"+name[0]).insertAdjacentHTML("beforeend",
+      `<figure><div class="s ${mode(p)==="stale"?"stale-s":""}" id="${name[0]}-${k}">${fn(p)}</div><figcaption>${LABEL[k]}</figcaption></figure>`);
+  }
+}
+// Long-destination stress: replace row 1 destination to test truncation honesty.
+out.insertAdjacentHTML("beforeend", `<h2>Long-destination stress</h2><p class="n">Same live fixture with a 38-character destination. Ellipsis is the honest fallback; full name never silently shortened to a different place.</p><div class="grid" id="gL"></div>`);
+for (const [n,fn] of [["A",A],["B",B],["C",C]]) {
+  const p = JSON.parse(JSON.stringify(DATA.live_normal)); p.services[0].dest = "Bristol Temple Meads via Swindon & Bath"; p.services[1].dest = "Cheltenham Spa";
+  document.getElementById("gL").insertAdjacentHTML("beforeend", `<figure><div class="s" id="L${n}">${fn(p)}</div><figcaption>${n}</figcaption></figure>`);
+}
+
+// ---- Takeover + empty-state design (on concept C) ----
+// Trigger rule (mirrors docs/design-decision.md). Only the NEXT service can take over, and only on fresh live data.
+function takeoverKind(p){
+  if (mode(p) !== "live") return null;            // never from stale or timetable data
+  const n = p.services[0]; if (!n) return null;
+  if (n.state === "cancelled") return "cancelled";
+  if (n.plat && n.plat_was) return "platform";
+  if (n.state === "delayed" && n.late >= 10) return "delayed";
+  return null;
+}
+function nextLine(p){
+  const n = p.services.find((s,i)=> i>0 && s.state!=="cancelled");
+  return n ? `Next: ${n.std} - ${platTxt(n,p) ? "Platform "+n.plat : "platform tbc"}` + (n.state==="delayed" ? ` - ${n.etd ? "exp "+n.etd : "delayed"}` : "") : "No later trains listed";
+}
+function T(p, kind){
+  const n = p.services[0];
+  const label = {cancelled:"CANCELLED", delayed:`DELAYED ${n.late} MIN`, platform:"PLATFORM CHANGE"}[kind];
+  const cls = kind==="cancelled" ? "red" : "amb";
+  const bandChip = `<div class="abs chip live" style="top:8px">${p._age>=120 ? "LIVE "+mins(p._age)+"m" : "LIVE"}</div>`;
+  let big, bigStyle, detail;
+  if (kind==="cancelled"){ big = n.std; bigStyle="canc"; detail = n.why ? "Reason: "+n.why : "No reason given"; }
+  else if (kind==="delayed"){ big = n.etd; bigStyle="warn"; detail = `Was ${n.std}` + (n.why ? " - "+n.why : ""); }
+  else { big = "P"+n.plat; bigStyle="warn"; detail = `Was platform ${n.plat_was} - ${n.std} departure`; }
+  return `<div class="abs band ${cls}"><div class="abs b" style="left:8px;top:4px;font-size:24px;line-height:26px">${label}</div>${bandChip}</div>`+
+    `<div class="abs b ${bigStyle}" style="left:8px;top:36px;font-size:60px;line-height:64px">${big}</div>`+
+    (kind==="platform" ? "" : "")+
+    `<div class="abs el b ${kind==="cancelled"?"canc":""}" style="left:8px;top:102px;width:304px;font-size:22px;line-height:26px">${kind==="platform" ? n.std+" " : ""}${esc(n.dest)}</div>`+
+    `<div class="abs el ${kind==="cancelled"?"bad":"warn"}" style="left:8px;top:128px;width:304px;font-size:14px;line-height:18px">${esc(detail)}</div>`+
+    `<div class="abs" style="left:0;top:150px;width:320px;height:22px;background:#1a1a1a;border-top:1px solid #333"></div>`+
+    `<div class="abs el" style="left:8px;top:152px;width:304px;font-size:14px;line-height:18px">${esc(nextLine(p))}</div>`;
+}
+function E(p){ // live board, zero services in the window
+  const f = esc(p.filter ? p.filter.label : "All trains");
+  return hdr(p)+
+    `<div class="abs b" style="left:0;top:50px;width:320px;text-align:center;font-size:24px;line-height:28px">No trains</div>`+
+    `<div class="abs b" style="left:0;top:84px;width:320px;text-align:center;font-size:18px;line-height:22px">${f}</div>`+
+    `<div class="abs dim" style="left:0;top:108px;width:320px;text-align:center;font-size:16px;line-height:20px">None expected in the next 2 hours</div>`+
+    `<div class="abs dim" style="left:0;top:152px;width:320px;text-align:center;font-size:13px;line-height:18px">Live: this is the current departure board</div>`;
+}
+(function(){
+  const clone = o => JSON.parse(JSON.stringify(o));
+  const plat = clone(DATA.live_normal); plat.services[0].plat = "3"; plat.services[0].plat_was = "4"; plat._age = 40;
+  const items = [
+    ["Takeover: next train cancelled (fixture cancelled_platform_change)", T(DATA.cancelled_platform_change,"cancelled"), ""],
+    ["Takeover: next train ≥10 min late (fixture delayed)", T(DATA.delayed,"delayed"), ""],
+    ["Takeover: platform change on next train (live fixture, modified)", T(plat,"platform"), ""],
+    ["Empty live board (fixture empty)", E(DATA.empty), ""]];
+  out.insertAdjacentHTML("beforeend", `<h2>Takeover and empty states (concept C)</h2><p class="n">The takeover shows for 15 s, then the board returns. It fires only for the next service on fresh live data, and re-arms only if that service's state changes.</p><div class="grid" id="gT"></div>`);
+  for (const [cap, html] of items) document.getElementById("gT").insertAdjacentHTML("beforeend", `<figure><div class="s">${html}</div><figcaption>${cap}</figcaption></figure>`);
+  const rows = Object.keys(DATA).map(k => `<tr><td>${LABEL[k]||k}</td><td>${mode(DATA[k])}${DATA[k]._age>600?" ("+mins(DATA[k]._age)+" min old)":""}</td><td>${takeoverKind(DATA[k]) || "none"}</td></tr>`).join("");
+  out.insertAdjacentHTML("beforeend", `<p class="n">Trigger rule applied to each fixture:</p><table class="r"><tr><th>fixture</th><th>data mode</th><th>takeover</th></tr>${rows}</table>`);
+})();
+
+// ---- README picture: open this page with #readme to show only six representative screens ----
+if (location.hash === "#readme") {
+  const clone = o => JSON.parse(JSON.stringify(o));
+  const plat = clone(DATA.live_normal); plat.services[0].plat = "3"; plat.services[0].plat_was = "4"; plat._age = 40;
+  const shots = [
+    ["Live board", C(DATA.live_normal)], ["Delayed", C(DATA.delayed)], ["Cancelled, platform change", C(DATA.cancelled_platform_change)],
+    ["Alert: cancelled", T(DATA.cancelled_platform_change, "cancelled")], ["Alert: platform change", T(plat, "platform")], ["No recent update", C(DATA.stale)]];
+  document.body.style.margin = "18px";
+  document.body.innerHTML = `<div style="display:grid;grid-template-columns:repeat(3,auto);gap:22px 20px;justify-content:start;zoom:1.35">` +
+    shots.map(([cap, html]) => `<figure><div class="s ${html.includes("STALE") ? "stale-s" : ""}">${html}</div><figcaption style="font-size:13px">${cap}</figcaption></figure>`).join("") + `</div>`;
+}
+</script></body></html>

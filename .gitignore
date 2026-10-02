@@ -1,0 +1,17 @@
+# secrets and local config (your settings live in config.ini; copy config.example.ini to start)
+config.ini
+.env
+*.env
+__pycache__/
+
+# local agent/workflow files
+.claude/
+
+# release images built by tools/package_release.py
+/dist/
+
+# ESP-IDF build output and generated config
+/firmware/build/
+/firmware/sdkconfig
+/firmware/sdkconfig.old
+/firmware/managed_components/

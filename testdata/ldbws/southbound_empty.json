@@ -1,0 +1,13 @@
+{
+  "generatedAt": "2026-10-02T15:17:47.6126798+01:00",
+  "locationName": "Berkhamsted",
+  "crs": "BKM",
+  "filterLocationName": "Hemel Hempstead",
+  "filtercrs": "HML",
+  "filterType": "to",
+  "platformAvailable": true,
+  "areServicesAvailable": true,
+  "Xmlns": {
+    "Count": 8
+  }
+}

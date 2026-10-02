@@ -1,0 +1,9 @@
+menu "Train info panel"
+
+    config TRAIN_DEMO_CYCLE
+        bool "Cycle the fixture screens instead of fetching live data"
+        default n
+        help
+            Visual check of every designed screen from static fixtures: no Wi-Fi, no network.
+
+endmenu
