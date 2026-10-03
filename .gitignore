@@ -15,3 +15,6 @@ __pycache__/
 /firmware/sdkconfig
 /firmware/sdkconfig.old
 /firmware/managed_components/
+
+# detailed session logs stay local
+/docs/status/history/
