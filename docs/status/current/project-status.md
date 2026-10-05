@@ -47,6 +47,26 @@ Rejected: a custom web flasher and native apps (browser limits, signing, upkeep)
    hardware testing); "stops at X" filter via calling points; bold/tabular font; tap actions.
 5. The exact v1.0.0 image has not been flashed to a panel (same code as the verified build; only example defaults
    and the version label differ).
+6. **Settings screen and saved presets** (feature, needs a design note in `docs/` first). Swiping past the last
+   direction reaches a full-screen "Settings" button. A swipe moves on as normal; a tap enters settings.
+   - Settings is a short series of screens, swiped through, with one or two large buttons on each.
+   - **Mode / station presets:** pick from stations saved in `config.ini` (e.g. departures or arrivals at the home
+     station, or other stations visited regularly) without reprovisioning. Adds an *arrivals* board mode (LDBWS
+     arrivals endpoint), which the firmware does not use yet.
+   - **Route presets:** named origin-to-destination routes (e.g. "A to B", "B to C") that show only trains
+     calling at both. Needs a calling-points filter (overlaps with the "stops at X" idea in item 4).
+   - Open questions: where preset lists live (`config.ini` to NVS, so no on-device text entry); whether the
+     selection survives a reboot; per-preset cache and API-quota cost (the `--check` estimate must cover it);
+     how the settings screen interacts with quiet hours and alerts; touch targets at 320x172.
+7. **Upcoming-trains list and single-train tracking** (feature). Fetch a longer window of departures (about the next
+   two hours) for the current station or preset, scroll through them vertically, and tap one to track it.
+   - Tracking shows that one train in a focused overlay-style view (time, destination, platform, status), polled
+     more closely than the normal board, and returns to the board on a timeout or tap.
+   - Open questions: LDBWS row and time-window limits and the extra request cost; whether tracking needs the
+     service-details endpoint; a vertical scroll must not clash with the horizontal direction swipe; this goes
+     against the "no continuous scrolling" brief, so keep it tap-initiated and static; the tracked train must
+     say plainly when it departs, is cancelled or drops off the board.
+   - Items 6 and 7 both want a tap-driven UI, so settle shared touch conventions (tap, swipe, back, timeout) once.
 
 ## Maintainer actions
 
